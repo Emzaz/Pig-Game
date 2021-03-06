@@ -6,10 +6,11 @@ GAME RULES:
 - BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
 - The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
 - The first player to reach 100 points on GLOBAL score wins the game
+- Player losses his entire score if he rolls two 6 in a row
 
 */
 
-var scores, roundScore, activePlayer, gamePlaying;
+var scores, roundScore, activePlayer, gamePlaying, lastDice;
 
 init();
 
@@ -23,15 +24,24 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         diceDOM.style.display = 'block';
         diceDOM.src = 'dice-' + dice + '.png';
 
+        //Player losses his entire score if he rolls two 6 in a row
+        if(dice === 6 && lastDice === 6) {
+            scores[activePlayer] = 0;
+            document.querySelector('#score-' + activePlayer).textContent = '0';
+            nextPlayer();
+        }
         //update the round score if the rolled number is not 1
-        if(dice !== 1) {
+        else if(dice !== 1) {
             //adding score
             roundScore += dice;
             document.querySelector('#current-' + activePlayer).textContent = roundScore;
-        } else {
+        } 
+        else {
             //next player
             nextPlayer();
         }
+
+        lastDice = dice;
     }
 
 });
@@ -44,8 +54,17 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
         //update the UI
         document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
+        var input = document.querySelector('.final-score').value;
+        var winnigScore;
+        
+        if(input) {
+            winnigScore = input;
+        } else {
+            winnigScore = 100;
+        }
+
         //check if the player is won
-        if(scores[activePlayer] >= 100) {
+        if(scores[activePlayer] >= winnigScore) {
             document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
 
             document.querySelector('.dice').style.display = 'none';
