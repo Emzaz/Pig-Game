@@ -13,6 +13,7 @@ GAME RULES:
 var scores, roundScore, activePlayer, gamePlaying, lastDice;
 
 init();
+//new commit
 
 document.querySelector('.btn-roll').addEventListener('click', function(){
     if(gamePlaying) {
